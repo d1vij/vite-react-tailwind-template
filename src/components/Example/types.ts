@@ -1,3 +1,3 @@
 export type ExampleProps = {
-    label: string
-}
+    label: string;
+};

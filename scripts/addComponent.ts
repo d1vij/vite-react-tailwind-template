@@ -4,7 +4,7 @@
 
 import chalk from "chalk";
 import process from "process";
-import fs  from "fs";
+import fs from "fs";
 import path from "path";
 import readline from "readline-sync";
 
@@ -16,43 +16,43 @@ const config: Config = {
 };
 
 function createContent(...lines: string[]): string {
-    return lines.join('\n');
+    return lines.join("\n");
 }
 
 function generateComponentStructure(componentName: string): Structure {
-
     const indexContent = createContent(
         `export { default } from "./${componentName}"`,
-        `export * from "./types"`
-    )
+        `export * from "./types"`,
+    );
 
-    const replacedName = componentName.replaceAll('-', '_');
+    const replacedName = componentName.replaceAll("-", "_");
 
-    const typesContent= createContent(
-        `export type ${replacedName}Props = {}`
-    )
+    const typesContent = createContent(`export type ${replacedName}Props = {}`);
     const stylesheetContent = createContent(
-        `.${replacedName.toLowerCase()} { /* not implemented */}`
-    )
+        `.${replacedName.toLowerCase()} { /* not implemented */}`,
+    );
     const componentFileContent = createContent(
-        "import styles from \"./styles\"",
+        'import styles from "./styles"',
         `import type {${replacedName}Props} from "./types";`,
         "",
-        `export default function ${replacedName}({  }: ${replacedName}Props){}`
-    )
+        `export default function ${replacedName}({  }: ${replacedName}Props){}`,
+    );
 
     return [
         // index.ts
-        { nodeType: "file",name:`index.ts`,  content:indexContent},
+        { nodeType: "file", name: `index.ts`, content: indexContent },
         // component file
-        { nodeType: "file",name:`${componentName}.tsx`,  content:componentFileContent},
+        { nodeType: "file", name: `${componentName}.tsx`, content: componentFileContent },
         // stylesheet
-        { nodeType: "file",name:`${componentName.toLowerCase()}.module.scss`,  content:stylesheetContent},
+        {
+            nodeType: "file",
+            name: `${componentName.toLowerCase()}.module.scss`,
+            content: stylesheetContent,
+        },
         // types.ts
-        { nodeType: "file",name:`types.ts`,  content:typesContent},
-    ]
+        { nodeType: "file", name: `types.ts`, content: typesContent },
+    ];
 }
-
 
 class Logger {
     public static error(...content: unknown[]) {
@@ -77,9 +77,9 @@ class FileExistsError extends Error {
 }
 
 type Config = {
-    auto_title: boolean,
-    components_dir: string,
-}
+    auto_title: boolean;
+    components_dir: string;
+};
 
 interface DirectoryNode {
     name: string;
@@ -94,11 +94,11 @@ interface FileNode {
 type FsNode = DirectoryNode | FileNode;
 type Structure = FsNode[];
 
-function createFile(name:string, at: string, content: string) {
+function createFile(name: string, at: string, content: string) {
     const fpath = path.join(at, name);
     Logger.debug("Creating file at ", fpath);
     if (fs.existsSync(fpath)) {
-        throw new FileExistsError(`A file/folder already exists at ${chalk.blue(fpath)}`)
+        throw new FileExistsError(`A file/folder already exists at ${chalk.blue(fpath)}`);
     }
 
     fs.writeFileSync(fpath, content, { encoding: "utf-8", flag: "w" });
@@ -117,7 +117,7 @@ function createDirectory(name: string, at: string, children: FsNode[]) {
                 break;
             case "file":
                 createFile(node.name, currPath, node.content);
-            break;
+                break;
         }
     }
 }
@@ -134,7 +134,7 @@ function createComponent(componentName: string, root: string) {
         switch (node.nodeType) {
             case "dir":
                 createDirectory(node.name, root, node.content);
-            break;
+                break;
             case "file":
                 createFile(node.name, root, node.content);
                 break;
@@ -143,7 +143,6 @@ function createComponent(componentName: string, root: string) {
         }
     }
 }
-
 
 function main() {
     let componentName = readline.question("Name of component to generate: ").trim();
@@ -158,16 +157,11 @@ function main() {
     }
 
     if (config.auto_title) {
-        componentName =
-            componentName.charAt(0).toUpperCase() + componentName.slice(1);
+        componentName = componentName.charAt(0).toUpperCase() + componentName.slice(1);
     }
     Logger.log("Creating a component with name ", chalk.blue(componentName));
 
-    const componentDir = path.join(
-        process.cwd(),
-        config.components_dir,
-        componentName,
-    );
+    const componentDir = path.join(process.cwd(), config.components_dir, componentName);
 
     // henceforth the presence of any subfolder/subfile
     // wont be checked since the root folder is created here
@@ -182,6 +176,6 @@ function main() {
         process.exit();
     }
 
-    createComponent(componentName, config.components_dir)
+    createComponent(componentName, config.components_dir);
 }
 main();

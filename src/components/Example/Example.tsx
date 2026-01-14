@@ -18,7 +18,7 @@
  *   import type { ExampleProps } from "@components/Example";
  */
 
- import styles from "./example.module.scss";
+import styles from "./example.module.scss";
 import type { ExampleProps } from "./types";
 
 export default function Example({ label }: ExampleProps) {
@@ -29,7 +29,7 @@ export default function Example({ label }: ExampleProps) {
                 styles.example +
                 " " +
                 // Tailwind Classes
-                "p-5 text-3xl bg-blue-300 text-slate-600 text-center"
+                "bg-blue-300 p-5 text-center text-3xl text-slate-600"
             }
         >
             This is an example component
