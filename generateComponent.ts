@@ -139,6 +139,7 @@ function createComponent(componentName: string, root: string) {
                 createFile(node.name, root, node.content);
                 break;
             default:
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                 throw TypeError(`Invalid FsNode type ${node}`);
         }
     }
