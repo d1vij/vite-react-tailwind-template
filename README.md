@@ -9,6 +9,8 @@
 - Component Generator: CLI tool for rapid creation of React Components. See [Creating Component](#creating-component).
 - Source (src) folder resolution via `@/*` alias.
 
+read the _Example_ component for more explaination
+
 ## Commands
 
 Run via `npm run <name>`
