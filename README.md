@@ -41,6 +41,8 @@ npm install
 # Start development server
 npm run dev
 ```
+> [!NOTE]
+> I would suggest using pnpm rather than npm for quicker package installations
 
 ## Creating Component
 
