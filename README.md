@@ -1,75 +1,61 @@
-# React + TypeScript + Vite
+# React + Tailwind v4 + Vite (Rolldown) Template
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Features
 
-Currently, two official plugins are available:
+- React 19 & Compiler
+- Vite + Rolldown
+- Tailwind CSS v4 along with `prettier-plugin-tailwindcss` for automatic class sorting.
+- Styling: SCSS files are processed with `postcss-scss` and are provided full type hinting in TypeScript via `vite-plugin-sass-dts`.
+- Component Generator: CLI tool for rapid creation of React Components. See [Creating Component](#creating-component).
+- Source (src) folder resolution via `@/*` alias.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Commands
 
-## React Compiler
+Run via `npm run <name>`
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- `lint`: Lint project using eslint
+- `generate`: Create a new React Component
 
-Note: This will impact Vite dev & build performances.
+Vite Centric
+- `dev`: Runs vite dev server
+- `build`: Builds for production
+- `preview`: Preview production build
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Installation
 
-```js
-export default defineConfig([
-    globalIgnores(["dist"]),
-    {
-        files: ["**/*.{ts,tsx}"],
-        extends: [
-            // Other configs...
+1. Clone the repo
 
-            // Remove tseslint.configs.recommended and replace with this
-            tseslint.configs.recommendedTypeChecked,
-            // Alternatively, use this for stricter rules
-            tseslint.configs.strictTypeChecked,
-            // Optionally, add this for stylistic rules
-            tseslint.configs.stylisticTypeChecked,
+```bash
+git clone https://github.com/d1vij/react-project-template
 
-            // Other configs...
-        ],
-        languageOptions: {
-            parserOptions: {
-                project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-                tsconfigRootDir: import.meta.dirname,
-            },
-            // other options...
-        },
-    },
-]);
+cd react-project-template
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Install Dependencies
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+```bash
+# Install dependencies
+npm install
 
-export default defineConfig([
-    globalIgnores(["dist"]),
-    {
-        files: ["**/*.{ts,tsx}"],
-        extends: [
-            // Other configs...
-            // Enable lint rules for React
-            reactX.configs["recommended-typescript"],
-            // Enable lint rules for React DOM
-            reactDom.configs.recommended,
-        ],
-        languageOptions: {
-            parserOptions: {
-                project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-                tsconfigRootDir: import.meta.dirname,
-            },
-            // other options...
-        },
-    },
-]);
+# Start development server
+npm run dev
 ```
+
+## Creating Component
+
+A new component can be created by running
+
+```bash
+npm run generate
+```
+
+Components can contain dashes in their names, but should not have any spaces.
+
+By default components are created in the src/components directory, this can be modified by changing path in `scripts/addComponent.ts`
+
+
+--- 
+
+> [!NOTE]
+> The template is _heavily_ opinionated :)

@@ -7,3 +7,4 @@ pn install sass sass-embedded tailwindcss @tailwindcss/vite vite-plugin-sass-dts
 - source folder aliased as  `@/*`
 - everythig modularized
 styles folder -> Common / globally used css eg theme/colors.scss
+react + vite + scss + tailwindcss
