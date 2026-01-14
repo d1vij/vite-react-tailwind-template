@@ -1,23 +1,24 @@
 /**
- * All components live in their own subfolder within @/components directory
- * and are the sole default export per sub-folder, this allows for direct import of
- * component as 'import Example from "@components/Example"'
+ * Each component resides in its own subfolder inside the `@/components` directory
+ * and exposes a single default export. This enables direct imports such as:
  *
- * One component per folder within @/components directory
- * Each component folder has
- * 1. `Component.tsx` - which default exports the component
- * 2. `component.module.scss` - Styling file for that particular component
- * 3. `index.ts` - exports the component and its typings
- * 4. `types.ts` - contains the types requried by the component
- * 5. `example.module.d.scss.ts` - Auto generated when vite dev server is running and
+ *   import Example from "@components/Example";
  *
- * This setup encapsulates each component's declaration, styling and typings from other components
- * Imports are as
- * import Example from "@components/Example";
- * import type {ExampleProps} from "@components/Example";
+ * Component structure (one component per folder):
+ * 1. `Component.tsx`              – Default export of the component
+ * 2. `component.module.scss`      – Component-scoped styles
+ * 3. `index.ts`                   – Re-exports the component and its public types
+ * 4. `types.ts`                   – Type definitions used by the component
+ * 5. `component.module.d.scss.ts`         – Auto-generated while the Vite dev server is running
+ *
+ * This pattern encapsulates each component’s implementation, styles, and typings,
+ * preventing unintended coupling between components.
+ *
+ * Type-only imports:
+ *   import type { ExampleProps } from "@components/Example";
  */
 
-import styles from "./example.module.scss";
+ import styles from "./example.module.scss";
 import type { ExampleProps } from "./types";
 
 export default function Example({ label }: ExampleProps) {

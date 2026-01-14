@@ -8,18 +8,61 @@ import fs  from "fs";
 import path from "path";
 import readline from "readline-sync";
 
+const DEBUG = true;
+
 const config: Config = {
     auto_title: true,
     components_dir: "src/components",
-    component_structure: []
 };
 
+function createContent(...lines: string[]): string {
+    return lines.join('\n');
+}
+
+function generateComponentStructure(componentName: string): Structure {
+
+    const indexContent = createContent(
+        `export { default } from "./${componentName}"`,
+        `export * from "./types"`
+    )
+
+    const replacedName = componentName.replaceAll('-', '_');
+
+    const typesContent= createContent(
+        `export type ${replacedName}Props = {}`
+    )
+    const stylesheetContent = createContent(
+        `.${replacedName.toLowerCase()} { /* not implemented */}`
+    )
+    const componentFileContent = createContent(
+        "import styles from \"./styles\"",
+        `import type {${replacedName}Props} from "./types";`,
+        "",
+        `export default function ${replacedName}({  }: ${replacedName}Props){}`
+    )
+
+    return [
+        // index.ts
+        { nodeType: "file",name:`index.ts`,  content:indexContent},
+        // component file
+        { nodeType: "file",name:`${componentName}.tsx`,  content:componentFileContent},
+        // stylesheet
+        { nodeType: "file",name:`${componentName.toLowerCase()}.module.scss`,  content:stylesheetContent},
+        // types.ts
+        { nodeType: "file",name:`types.ts`,  content:typesContent},
+    ]
+}
+
+
 class Logger {
-    public static error(...content: string[]) {
+    public static error(...content: unknown[]) {
         console.log(chalk.yellow("> ") + chalk.red(...content));
     }
-    public static log(...content: string[]) {
+    public static log(...content: unknown[]) {
         console.log(chalk.yellow("> ") + chalk.white(...content));
+    }
+    public static debug(...content: unknown[]) {
+        if (DEBUG) console.log(chalk.yellow("> ") + chalk.yellow(...content));
     }
 }
 
@@ -36,7 +79,6 @@ class FileExistsError extends Error {
 type Config = {
     auto_title: boolean,
     components_dir: string,
-    component_structure: Structure
 }
 
 interface DirectoryNode {
@@ -54,16 +96,17 @@ type Structure = FsNode[];
 
 function createFile(name:string, at: string, content: string) {
     const fpath = path.join(at, name);
+    Logger.debug("Creating file at ", fpath);
     if (fs.existsSync(fpath)) {
         throw new FileExistsError(`A file/folder already exists at ${chalk.blue(fpath)}`)
     }
 
-    fs.writeFileSync(fpath, content, { encoding: "utf-8", mode: "w" });
+    fs.writeFileSync(fpath, content, { encoding: "utf-8", flag: "w" });
 }
 
 function createDirectory(name: string, at: string, children: FsNode[]) {
     const currPath: string = path.join(at, name);
-
+    Logger.debug("Creating directory at ", currPath);
 
     fs.mkdirSync(currPath);
 
@@ -79,14 +122,21 @@ function createDirectory(name: string, at: string, children: FsNode[]) {
     }
 }
 
-function createComponent(componentName: string, root: string, structure: FsNode[]) {
+function createComponent(componentName: string, root: string) {
     createDirectory(componentName, root, []);
+
+    const structure = generateComponentStructure(componentName);
+    Logger.debug(JSON.stringify(structure, null, 4));
+
+    root = path.join(root, componentName);
 
     for (const node of structure) {
         switch (node.nodeType) {
             case "dir":
-                break;
+                createDirectory(node.name, root, node.content);
+            break;
             case "file":
+                createFile(node.name, root, node.content);
                 break;
             default:
                 throw TypeError(`Invalid FsNode type ${node}`);
@@ -96,7 +146,7 @@ function createComponent(componentName: string, root: string, structure: FsNode[
 
 
 function main() {
-    let componentName = readline.question("Name of component to generate: ");
+    let componentName = readline.question("Name of component to generate: ").trim();
     if (componentName.length === 0) {
         Logger.error("Component name cannot be blank!");
         process.exit();
@@ -132,6 +182,6 @@ function main() {
         process.exit();
     }
 
-    createComponent(componentName, config.components_dir, config.component_structure);
+    createComponent(componentName, config.components_dir)
 }
 main();
