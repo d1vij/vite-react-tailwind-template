@@ -1,0 +1,2 @@
+/* Loader for tailwindcss since directly importing tailwindcss into the scss files break intellisence for both */
+@import "tailwindcss";

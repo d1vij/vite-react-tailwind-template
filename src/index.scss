@@ -1,8 +1,18 @@
-@import "tailwindcss";
+/* referencing loaded tailwindcss */
+@use "@/tailwind.css";
 
 :root {
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* Using scss + tailwindcss together */
+@mixin khichadi {
+    @apply bg-sky-200;
+}
+
+body {
+    @include khichadi;
 }
