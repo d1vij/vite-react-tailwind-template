@@ -19,10 +19,10 @@ Run via `npm run <name>`
 - `generate`: Create a new React Component
 
 Vite Centric
+
 - `dev`: Runs vite dev server
 - `build`: Builds for production
 - `preview`: Preview production build
-
 
 ## Installation
 
@@ -43,6 +43,7 @@ npm install
 # Start development server
 npm run dev
 ```
+
 > [!NOTE]
 > I would suggest using pnpm rather than npm for quicker package installations
 
@@ -58,8 +59,7 @@ Components can contain dashes in their names, but should not have any spaces.
 
 By default components are created in the src/components directory, this can be modified by changing path in `scripts/addComponent.ts`
 
-
---- 
+---
 
 > [!NOTE]
 > The template is _heavily_ opinionated :)
