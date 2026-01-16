@@ -8,12 +8,9 @@ import fs from "fs";
 import path from "path";
 import readline from "readline-sync";
 
-const DEBUG = true;
+import Logger from "./utils/Logger";
 
-const config: Config = {
-    auto_title: true,
-    components_dir: "src/components",
-};
+import { config } from "./globals";
 
 function createContent(...lines: string[]): string {
     return lines.join("\n");
@@ -54,18 +51,6 @@ function generateComponentStructure(componentName: string): Structure {
     ];
 }
 
-class Logger {
-    public static error(...content: unknown[]) {
-        console.log(chalk.yellow("> ") + chalk.red(...content));
-    }
-    public static log(...content: unknown[]) {
-        console.log(chalk.yellow("> ") + chalk.white(...content));
-    }
-    public static debug(...content: unknown[]) {
-        if (DEBUG) console.log(chalk.yellow("> ") + chalk.yellow(...content));
-    }
-}
-
 class FileExistsError extends Error {
     constructor(message = "File already exists") {
         super(message);
@@ -75,11 +60,6 @@ class FileExistsError extends Error {
         Object.setPrototypeOf(this, new.target.prototype);
     }
 }
-
-type Config = {
-    auto_title: boolean;
-    components_dir: string;
-};
 
 interface DirectoryNode {
     name: string;
@@ -122,21 +102,21 @@ function createDirectory(name: string, at: string, children: FsNode[]) {
     }
 }
 
-function createComponent(componentName: string, root: string) {
-    createDirectory(componentName, root, []);
+function createComponent(componentName: string, componentRoot: string) {
+    createDirectory(componentName, componentRoot, []);
 
     const structure = generateComponentStructure(componentName);
     Logger.debug(JSON.stringify(structure, null, 4));
 
-    root = path.join(root, componentName);
+    const componentDir = path.join(componentRoot, componentName);
 
     for (const node of structure) {
         switch (node.nodeType) {
             case "dir":
-                createDirectory(node.name, root, node.content);
+                createDirectory(node.name, componentDir, node.content);
                 break;
             case "file":
-                createFile(node.name, root, node.content);
+                createFile(node.name, componentDir, node.content);
                 break;
             default:
                 // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -149,7 +129,7 @@ function main() {
     let componentName = readline.question("Name of component to generate: ").trim();
     if (componentName.length === 0) {
         Logger.error("Component name cannot be blank!");
-        process.exit();
+        process.exit()
     }
 
     if (componentName.includes(" ")) {

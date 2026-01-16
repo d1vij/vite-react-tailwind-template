@@ -8,7 +8,8 @@
         "build": "tsc -b && vite build",
         "lint": "eslint .",
         "preview": "vite preview",
-        "generate": "tsx generateComponent.ts",
+        "generate": "tsx dev/generateComponent.ts",
+        "delete": "tsx dev/deleteComponent.ts",
         "format": "prettier --write src"
     },
     "dependencies": {

@@ -17,6 +17,7 @@ Run via `npm run <name>`
 
 - `lint`: Lint project using eslint
 - `generate`: Create a new React Component
+- `delete`: Delete a React Component
 
 Vite Centric
 
